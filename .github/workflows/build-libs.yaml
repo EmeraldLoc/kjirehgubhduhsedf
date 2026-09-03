@@ -8,7 +8,16 @@ on:
 
 jobs:
   build-static:
-    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-22.04
+            arch: x86_64
+          - runner: ubuntu-22.04-arm
+            arch: aarch64
+
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: Checkout repository
@@ -34,6 +43,7 @@ jobs:
             libxfixes-dev \
             libxi-dev \
             libxss-dev \
+            libxtst-dev \
             libxkbcommon-dev \
             libdrm-dev \
             libgbm-dev \
@@ -53,8 +63,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DSDL_SHARED=OFF \
             -DSDL_STATIC=ON \
-            -DSDL_TEST_LIBRARY=OFF \
-            -DSDL_X11_XTEST=OFF
+            -DSDL_TEST_LIBRARY=OFF
 
       - name: Build static library
         run: |
@@ -67,5 +76,5 @@ jobs:
       - name: Upload static library artifact
         uses: actions/upload-artifact@v4
         with:
-          name: libSDL3-static-ubuntu-22.04
+          name: libSDL3-static-ubuntu-22.04-${{ matrix.arch }}
           path: build/libSDL3.a
