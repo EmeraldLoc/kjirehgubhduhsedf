@@ -53,7 +53,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DSDL_SHARED=OFF \
             -DSDL_STATIC=ON \
-            -DSDL_TEST_LIBRARY=OFF
+            -DSDL_TEST_LIBRARY=OFF \
             -DSDL_X11_XTEST=OFF
 
       - name: Build static library
